@@ -13,7 +13,7 @@ class Array
   def merge_sort
     return self if size == 1
 
-    left, right = self[0...size/2].merge_sort, self[size/2..-1].merge_sort
+    left, right = self[0...size / 2].merge_sort, self[size / 2..-1].merge_sort
     merge(left, right)
   end
 
