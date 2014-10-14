@@ -26,3 +26,21 @@ class Array
   #   self
   # end
 end
+
+require 'benchmark'
+
+best = Benchmark.measure do
+  (1..1000).to_a.insertion_sort
+end
+
+middle = Benchmark.measure do
+  (1..1000).to_a.shuffle.insertion_sort
+end
+
+worst = Benchmark.measure do
+  (1..1000).to_a.reverse.insertion_sort
+end
+
+puts "Best case: #{best}"
+puts "Middle case: #{middle}"
+puts "Worst case: #{worst}"
