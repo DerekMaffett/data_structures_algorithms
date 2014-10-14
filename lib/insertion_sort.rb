@@ -1,6 +1,7 @@
+# Patch for implementing custom sorting algorithms on arrays
 class Array
   def insertion_sort
-    self.each_with_index do |hold, i|
+    each_with_index do |_hold, i|
       until self[i] >= self[i - 1] || i == 0
         swap(i)
         i -= 1
@@ -9,7 +10,7 @@ class Array
   end
 
   def swap(i)
-    self[i - 1], self[i] = self[i], self[i -1]
+    self[i - 1], self[i] = self[i], self[i - 1]
   end
 
   # My current attempt at a comparison insertion sort. Not currently functional.
