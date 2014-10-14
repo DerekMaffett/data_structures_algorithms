@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'insertion_sort'
+require 'sort'
 require 'benchmark'
 
 describe Array do
