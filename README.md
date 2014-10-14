@@ -19,3 +19,15 @@ elements are swapped until it's in order - in this case, elements are only moved
 forwards, and the element being placed is simply removed from the flow and
 compared with other elements until it's placed correctly in one move, as
 opposed to a swap which moves the element being placed each time.
+
+# Merge Sort
+
+This sorting algorithm recursively calls the merge_sort method on its own
+subarrays (split to equal half each of the array merge_sort is called on) until
+the arrays reach a size of one. Once that boundary condition is reached,
+merge_sort can start returning up the call chain and reach the merge method
+which unites the left and right arrays at each level by calling shift on the
+array with the lowest initial element and adding that shifted value to a
+new array. Thus, it takes advantage of the individually sorted subarrays to
+quickly merge them together, still sorted. Finally, when one subarray is empty,
+it simply adds the other array on.
