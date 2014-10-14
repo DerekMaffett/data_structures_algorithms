@@ -11,10 +11,11 @@ for practice, so feel free to use it for that purpose.
 
 # Insertion Sort
 
-My current solution for an insertion sort runs a comparison between one element
-and the last and swaps the numbers until it hits the beginning of the array or
-the pointer element is larger than the previous element. However, this solution
-is less than ideal because it has to run a swap each time. A better solution,
-though my current implementation fails, would be to run comparisons and shift
-all the values at once - that way the number being placed only has to move once
-rather than 1 to n times.
+My solution iterates through the array and for each item, it holds it separately
+and compares the held value backwards through the array until it finds a
+place where it is no longer equal to or greater than the previous item. Note
+that this is just a slight modification of using a swapping method where two
+elements are swapped until it's in order - in this case, elements are only moved
+forwards, and the element being placed is simply removed from the flow and
+compared with other elements until it's placed correctly in one move, as
+opposed to a swap which moves the element being placed each time.
