@@ -21,6 +21,7 @@ describe Array do
     worst = Benchmark.measure { 1000.downto(1).to_a.insertion_sort! }
     all_same = Benchmark.measure { Array.new(1000) { 5 }.insertion_sort! }
 
+    puts "Insertion sort:"
     puts "Best case: #{best}"
     puts "Random case: #{random}"
     puts "Worst case: #{worst}"
