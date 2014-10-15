@@ -13,13 +13,14 @@ class Array
   def merge_sort
     return self if size == 1
 
-    left, right = self[0...size / 2].merge_sort, self[size / 2..-1].merge_sort
+    mid = size / 2
+    left, right = self[0...mid].merge_sort, self[mid..-1].merge_sort
     merge(left, right)
   end
 
   def merge(l, r)
     merged_array = []
-    merged_array.push(l[0] <= r[0] ? l.shift : r.shift) while l.first && r.first
+    merged_array.push(l[0] <= r[0] ? l.shift : r.shift) while l[0] && r[0]
     merged_array + (r.empty? ? l : r)
   end
 end
