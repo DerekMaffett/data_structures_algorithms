@@ -17,13 +17,9 @@ class Array
     merge(left, right)
   end
 
-  def merge(left, right)
+  def merge(l, r)
     merged_array = []
-    i = 0
-    until left.size == 0 || right.size == 0
-      merged_array[i] = left[0] <= right[0] ? left.shift : right.shift
-      i += 1
-    end
-    merged_array + (right.empty? ? left : right)
+    merged_array.push(l[0] <= r[0] ? l.shift : r.shift) while l.first && r.first
+    merged_array + (r.empty? ? l : r)
   end
 end
