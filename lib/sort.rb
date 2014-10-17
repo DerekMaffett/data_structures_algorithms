@@ -59,35 +59,53 @@ class Array
     self[i], self[j] = self[j], self[i]
   end
 
-  # Change to optional argument
   def radix_sort(start = true)
-    array = start ? string_arrayify : array_split
-    puts array
+    puts "Stringify: #{stringify}"
+    puts "Self: #{self}"
+    array = start ? stringify : self
     msd_index = array.find_msd - 1
+    puts "Sorting by #{msd_index + 1}'s place:"
     buckets = fill_buckets(array, msd_index)
-    buckets.each do |bucket|
-      bucket.radix_sort(false) if bucket.size > 1
+    buckets.each do |bucket_name, contents|
+      if contents.size > 1 && msd_index > 0
+        buckets[bucket_name] = contents.radix_sort(false)
+      end
     end
     sort_order = [*0..9].map(&:to_s)
-    sort_order.inject { |result, bucket| result += buckets[bucket] }
+    result = sort_order.inject([]) { |result, bucket|
+      result += buckets[bucket]
+      puts "RESULT: #{result}"
+      result }
+    result.reverse_stringify if start
   end
 
   def array_split
     map { |ele| [ele] }
   end
 
-  def string_arrayify
-    map { |ele| [ele.to_s.reverse] }
+  def reverse_stringify
+    map { |ele| ele.reverse.to_i }
+  end
+
+  def stringify
+    map { |ele| ele.to_s.reverse }
   end
 
   def find_msd
-    inject { |memo, ele| memo.length > ele.length ? memo : ele }
+    inject { |memo, ele| memo.length > ele.length ? memo : ele }.length
   end
 
-  def fill_bucket(array, msd_index)
-    buckets = Hash.new([])
-    array.each do |ele|
-      buckets[ele[0][msd_index]] += ele
+  def fill_buckets(array, msd_index)
+    buckets = Hash.new { |h, k| h[k] = [] }
+    puts "\tFilling buckets from array: #{p(array.map(&:reverse))}"
+    array.each do |num|
+
+      if num[msd_index]
+        puts "\tPutting #{num.reverse} into bucket #{num[msd_index]}"
+        buckets[num[msd_index]].push(num)
+      else
+        buckets['0'].push(num)
+      end
     end
     buckets
   end
