@@ -28,17 +28,17 @@ class Array
 
   # Developed along with the ruby on rails dev class
   def iterative_merge_sort
-    array = self.map { |e| [e] }
+    array = map { |e| [e] }
     array = array.each_slice(2).map { |l, r| merge(l, r) } while array.size > 1
     array.flatten
   end
 
-  def quicksort
+  def quicksort!
     return self if size <= 1
 
     pivot_index = pivot_split
-    self[0...pivot_index] = self[0...pivot_index].quicksort
-    self[pivot_index + 1..-1] = self[pivot_index + 1..-1].quicksort
+    self[0...pivot_index] = self[0...pivot_index].quicksort!
+    self[pivot_index + 1..-1] = self[pivot_index + 1..-1].quicksort!
 
     self
   end
@@ -46,7 +46,7 @@ class Array
   def pivot_split
     sort_index = 0
     pivot_value = delete_at([*0...size].sample)
-    self.each_with_index do |ele, i|
+    each_with_index do |ele, i|
       if ele < pivot_value
         swap!(i, sort_index)
         sort_index += 1
