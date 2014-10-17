@@ -19,8 +19,19 @@ class Array
   end
 
   def merge(l, r)
+    return l unless r # Inserted for the sake of iterative merge_sort
+
     merged_array = []
     merged_array.push(l[0] <= r[0] ? l.shift : r.shift) while l[0] && r[0]
     merged_array + (r.empty? ? l : r)
+  end
+
+  # Developed along with the ruby on rails dev class
+  def iterative_merge_sort
+
+
+    array = self.map { |e| [e] }
+    array = array.each_slice(2).map { |l, r| merge(l, r) } while array.size > 1
+    array.flatten
   end
 end
