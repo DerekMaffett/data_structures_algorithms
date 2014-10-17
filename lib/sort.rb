@@ -59,24 +59,26 @@ class Array
     self[i], self[j] = self[j], self[i]
   end
 
-  def radix_sort(start = true)
-    puts "Stringify: #{stringify}"
-    puts "Self: #{self}"
-    array = start ? stringify : self
-    msd_index = array.find_msd - 1
-    puts "Sorting by #{msd_index + 1}'s place:"
+  def radix_sort(start = true, msd_index = nil)
+    if start
+      array = to_radix
+      msd_index = array.find_msd - 1
+    else
+      array = self
+      msd_index -= 1
+    end
     buckets = fill_buckets(array, msd_index)
     buckets.each do |bucket_name, contents|
       if contents.size > 1 && msd_index > 0
-        buckets[bucket_name] = contents.radix_sort(false)
+        buckets[bucket_name] = contents.radix_sort(false, msd_index)
       end
     end
     sort_order = [*0..9].map(&:to_s)
-    result = sort_order.inject([]) { |result, bucket|
+    result = sort_order.inject([]) do |result, bucket|
       result += buckets[bucket]
-      puts "RESULT: #{result}"
-      result }
-    result.reverse_stringify if start
+      result
+    end
+    start ? result.reverse_stringify : result
   end
 
   def array_split
@@ -87,7 +89,7 @@ class Array
     map { |ele| ele.reverse.to_i }
   end
 
-  def stringify
+  def to_radix
     map { |ele| ele.to_s.reverse }
   end
 
@@ -97,11 +99,9 @@ class Array
 
   def fill_buckets(array, msd_index)
     buckets = Hash.new { |h, k| h[k] = [] }
-    puts "\tFilling buckets from array: #{p(array.map(&:reverse))}"
     array.each do |num|
 
       if num[msd_index]
-        puts "\tPutting #{num.reverse} into bucket #{num[msd_index]}"
         buckets[num[msd_index]].push(num)
       else
         buckets['0'].push(num)
