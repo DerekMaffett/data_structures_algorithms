@@ -13,17 +13,25 @@ class Array
   def merge_sort
     return self if size == 1
 
-    left, right = self[0...size / 2].merge_sort, self[size / 2..-1].merge_sort
+    mid = size / 2
+    left, right = self[0...mid].merge_sort, self[mid..-1].merge_sort
     merge(left, right)
   end
 
-  def merge(left, right)
+  def merge(l, r)
+    return l unless r # Inserted for the sake of iterative merge_sort
+
     merged_array = []
-    i = 0
-    until left.size == 0 || right.size == 0
-      merged_array[i] = left[0] <= right[0] ? left.shift : right.shift
-      i += 1
-    end
-    merged_array + (right.empty? ? left : right)
+    merged_array.push(l[0] <= r[0] ? l.shift : r.shift) while l[0] && r[0]
+    merged_array + (r.empty? ? l : r)
+  end
+
+  # Developed along with the ruby on rails dev class
+  def iterative_merge_sort
+
+
+    array = self.map { |e| [e] }
+    array = array.each_slice(2).map { |l, r| merge(l, r) } while array.size > 1
+    array.flatten
   end
 end
