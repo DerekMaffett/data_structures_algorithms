@@ -31,3 +31,19 @@ array with the lowest initial element and adding that shifted value to a
 new array. Thus, it takes advantage of the individually sorted subarrays to
 quickly merge them together, still sorted. Finally, when one subarray is empty,
 it simply adds the other array on.
+
+# Quicksort
+
+This sorting algorithm is also recursive. The recursive quicksort method
+returns itself immediately if the array is of size 0 or 1 (both of these
+scenarios are possible when picking a random pivot), and in all other
+situations runs the pivot_split method. This method selects a random element,
+deletes it out of the array while holding its value, and then compares each
+element of the array with itself, sending low values to populate the left of the
+array while leaving greater values in place. After n-1 comparisons, all the
+numbers have been split between values higher and lower than the pivot, and the
+store_index value marks the appropriate location for the pivot to be reinserted.
+The method then reinserts the pivot at the correct place and returns itself.
+After this, the subarrays below and ahead of the pivot (but not including the
+pivot!) are quicksorted, until everything is broken down to arrays of size 1 or
+0.

@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'sort'
-require 'benchmark'
 
 describe Array do
   it 'should return a sorted array with insertion sort' do
@@ -14,17 +13,5 @@ describe Array do
   end
   it 'should sort a shuffled array' do
     (1..10).to_a.shuffle.insertion_sort!.must_equal((1..10).to_a)
-  end
-  it 'is benchmarked' do
-    best = Benchmark.measure { (1..1000).to_a.insertion_sort! }
-    random = Benchmark.measure { (1..1000).to_a.shuffle.insertion_sort! }
-    worst = Benchmark.measure { 1000.downto(1).to_a.insertion_sort! }
-    all_same = Benchmark.measure { Array.new(1000) { 5 }.insertion_sort! }
-
-    puts 'Insertion sort:'
-    puts "Best case: #{best}"
-    puts "Random case: #{random}"
-    puts "Worst case: #{worst}"
-    puts "All same: #{all_same}"
   end
 end
