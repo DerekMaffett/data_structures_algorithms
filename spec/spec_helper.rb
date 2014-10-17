@@ -2,6 +2,7 @@ require 'minitest/spec'
 require 'minitest/autorun'
 require 'benchmark'
 
+# Custom Class for running benchmarks on sorting algorithms
 class CustomBenchmarker
   def initialize(sort)
     @benchmarks = {}
