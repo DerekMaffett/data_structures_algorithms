@@ -39,7 +39,6 @@ class Array
     pivot_index = pivot_split
     self[0...pivot_index] = self[0...pivot_index].quicksort!
     self[pivot_index + 1..-1] = self[pivot_index + 1..-1].quicksort!
-
     self
   end
 
@@ -58,5 +57,59 @@ class Array
 
   def swap!(i, j)
     self[i], self[j] = self[j], self[i]
+  end
+
+  def radix_sort(comp_index = nil)
+    radix = proc do |array, comp_index|
+      comp_index ||= array.find_msd
+      comp_index -= 1
+      buckets = array.fill_buckets(array, comp_index)
+      buckets.each do |bucket_name, contents|
+        if contents.size > 1 && comp_index > 0
+          buckets[bucket_name] = contents.radix_sort(comp_index)
+        end
+      end
+      collapse_buckets(buckets, [*0..9].map(&:to_s))
+    end
+
+    comp_index ? radix.call(self, comp_index) : do_in_radix(comp_index, radix)
+  end
+
+  def collapse_buckets(buckets, order)
+    order.reduce([]) { |accum, bucket| accum + (buckets[bucket]) }
+  end
+
+  def do_in_radix(comp_index, radix_proc)
+    array = to_radix
+    result = radix_proc.call(array, comp_index)
+    result.reverse_radix
+  end
+
+  def array_split
+    map { |ele| [ele] }
+  end
+
+  def reverse_radix
+    map { |ele| ele.reverse.to_i }
+  end
+
+  def to_radix
+    map { |ele| ele.to_s.reverse }
+  end
+
+  def find_msd
+    reduce { |memo, ele| memo.length > ele.length ? memo : ele }.length
+  end
+
+  def fill_buckets(array, comp_index)
+    buckets = Hash.new { |h, k| h[k] = [] }
+    array.each do |num|
+      if num[comp_index]
+        buckets[num[comp_index]].push(num)
+      else
+        buckets['0'].push(num)
+      end
+    end
+    buckets
   end
 end

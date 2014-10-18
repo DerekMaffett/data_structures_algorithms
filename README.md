@@ -47,3 +47,20 @@ The method then reinserts the pivot at the correct place and returns itself.
 After this, the subarrays below and ahead of the pivot (but not including the
 pivot!) are quicksorted, until everything is broken down to arrays of size 1 or
 0.
+
+Radix sort
+
+For my first implementation, I used an MSD recursive radix sort. The first step
+was to designate the algorithm as a proc which would be called within a
+sandwich code framework initially and recursively outside of the sandwich code.
+The sandwich code simply turns the array initially into reversed strings, and
+afterwards returns it to its original format. The algorithm itself simply sorts
+each of the reversed numbers into buckets based on initially the MSD, then
+decrementing for each subsequent recursion. Radix sort is called on each
+bucket that contains more than a single number, until it finally sorts
+by the ones place. Then all the buckets are collapsed back together up the call
+chain in sorted order.
+
+It's worth noting that the code for this algorithm is considerably more complex
+than the more basic LSD implementation - the sort can be run either way, though
+MSD is required for recursion.

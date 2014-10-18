@@ -7,7 +7,8 @@ describe Array do
       :insertion_sort!,
       :merge_sort,
       :iterative_merge_sort,
-      :quicksort!
+      :quicksort!,
+      :radix_sort
     ]
     puts "\n"
     sorts.each do |sort|
