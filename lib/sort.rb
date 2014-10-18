@@ -59,33 +59,41 @@ class Array
     self[i], self[j] = self[j], self[i]
   end
 
-  def radix_sort(start = true, msd_index = nil)
-    if start
-      array = to_radix
-      msd_index = array.find_msd - 1
-    else
-      array = self
+  def radix_sort(msd_index = nil)
+    rad_sort = Proc.new do |array, msd_index|
+      msd_index ||= array.find_msd
       msd_index -= 1
-    end
-    buckets = fill_buckets(array, msd_index)
-    buckets.each do |bucket_name, contents|
-      if contents.size > 1 && msd_index > 0
-        buckets[bucket_name] = contents.radix_sort(false, msd_index)
+      buckets = array.fill_buckets(array, msd_index)
+      buckets.each do |bucket_name, contents|
+        if contents.size > 1 && msd_index > 0
+          buckets[bucket_name] = contents.radix_sort(msd_index)
+        end
       end
+      result = collapse_buckets(buckets, [*0..9].map(&:to_s))
     end
-    sort_order = [*0..9].map(&:to_s)
-    result = sort_order.inject([]) do |result, bucket|
-      result += buckets[bucket]
-      result
+
+    if msd_index
+      rad_sort.call(self, msd_index)
+    else
+      do_within_radix(msd_index, rad_sort)
     end
-    start ? result.reverse_stringify : result
+  end
+
+  def collapse_buckets(buckets, order)
+    order.reduce([]) { |result, bucket| result += buckets[bucket] }
+  end
+
+  def do_within_radix(msd_index, radix_proc)
+    array = to_radix
+    result = radix_proc.call(array, msd_index)
+    result.reverse_radix
   end
 
   def array_split
     map { |ele| [ele] }
   end
 
-  def reverse_stringify
+  def reverse_radix
     map { |ele| ele.reverse.to_i }
   end
 
@@ -94,13 +102,12 @@ class Array
   end
 
   def find_msd
-    inject { |memo, ele| memo.length > ele.length ? memo : ele }.length
+    reduce { |memo, ele| memo.length > ele.length ? memo : ele }.length
   end
 
   def fill_buckets(array, msd_index)
     buckets = Hash.new { |h, k| h[k] = [] }
     array.each do |num|
-
       if num[msd_index]
         buckets[num[msd_index]].push(num)
       else
