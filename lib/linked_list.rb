@@ -67,6 +67,7 @@ class SinglyLinkedList
       return nil if previous_node.nexxt.nil?
       previous_node.nexxt = previous_node.nexxt.nexxt
     end
+    @size -= 1
     deleted_node
   end
 

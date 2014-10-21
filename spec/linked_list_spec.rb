@@ -53,6 +53,7 @@ describe SinglyLinkedList do
   it 'should remove a node' do
     @list.remove('Sally').value.must_equal 'Sally'
     @list.search('Sally').must_be_nil
+    @list.size.must_equal 2
   end
 
   it 'should return nil if node to be removed does not exist' do
