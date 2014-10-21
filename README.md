@@ -48,7 +48,7 @@ After this, the subarrays below and ahead of the pivot (but not including the
 pivot!) are quicksorted, until everything is broken down to arrays of size 1 or
 0.
 
-Radix sort
+# Radix sort
 
 For my first implementation, I used an MSD recursive radix sort. The first step
 was to designate the algorithm as a proc which would be called within a
