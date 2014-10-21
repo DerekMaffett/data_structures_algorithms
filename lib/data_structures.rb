@@ -105,7 +105,7 @@ module Structures
     end
 
     def pop
-      raise EmptyStackError unless first
+      fail EmptyStackError unless first
       remove(first).value
     end
   end
