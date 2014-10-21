@@ -48,7 +48,7 @@ After this, the subarrays below and ahead of the pivot (but not including the
 pivot!) are quicksorted, until everything is broken down to arrays of size 1 or
 0.
 
-Radix sort
+# Radix sort
 
 For my first implementation, I used an MSD recursive radix sort. The first step
 was to designate the algorithm as a proc which would be called within a
@@ -64,3 +64,34 @@ chain in sorted order.
 It's worth noting that the code for this algorithm is considerably more complex
 than the more basic LSD implementation - the sort can be run either way, though
 MSD is required for recursion.
+
+# Data Structures
+
+# Singly linked list
+
+I declared the Node class as being a Struct with parameters :value and :nexxt.
+Thus, each node has its own value as well as a reference to the next node in the
+list.
+
+To implement the actual list, I made a list class which tracks both the head of
+the list and the size of it. It is set up so that you can quickly construct a
+new list by passing in a list of values. For example:
+
+```
+SinglyLinkedList.new(1, 2, 'string', my_object)
+```
+
+This would add each item as a node in the arguments' order.
+
+Since searching and removing share many concerns, I implemented these functions
+to share the same basic search functionality. This is the node_before method,
+which searches for a particular node by always looking ahead of itself. While
+this would be simpler to implement in a search by simply looking at each item
+as the pointer comes to it, it would then be unusable for the remove function,
+which needs to find the item *before* the pointer reaches it. Using the
+node_before search for each one allowed leaving the search and remove functions
+to only deal with the edge cases.
+
+In order to make a good to_s conversion, I had to declare both an each function
+for singly linked lists and an adapter function for Nodes which can be easily
+added to for changing string formats.
