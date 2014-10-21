@@ -1,5 +1,6 @@
 Node = Struct.new(:value, :nexxt)
 
+# The nodes that a singly linked list is made out of
 class Node
   def to_s_adapter
     # klass = self.value.class
@@ -12,16 +13,17 @@ class Node
     #   "#{self.value}"
     # end
 
-    if self.value.class == String
-      string = "'#{self.value}'"
-    elsif self.value.class == Symbol
-      string = ":#{self.value}"
+    if value.class == String
+      "'#{value}'"
+    elsif value.class == Symbol
+      ":#{value}"
     else
-      string = "#{self.value}"
+      "#{value}"
     end
   end
 end
 
+# Class for a singly linked list
 class SinglyLinkedList
   attr_accessor :head, :size
 
@@ -31,7 +33,7 @@ class SinglyLinkedList
   end
 
   def insert(val)
-    @head = Node.new(val, self.head)
+    @head = Node.new(val, head)
     @size += 1
   end
 
