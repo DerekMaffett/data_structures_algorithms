@@ -95,3 +95,19 @@ to only deal with the edge cases.
 In order to make a good to_s conversion, I had to declare both an each function
 for singly linked lists and an adapter function for Nodes which can be easily
 added to for changing string formats.
+
+# Stack
+
+A stack, as pointed out by Philip Nguyen, can be easily implemented off of a
+singly linked list by simply adding and removing from the head of the list. I
+implemented this by inheriting Stack from SinglyLinkedList and making
+convenience methods which removed reference to nodes and gave an interface
+friendly for interfacing with a stack. However, the search and remove methods
+still exist in case they are desired.
+
+```
+stack = Structures::Stack.new('John')
+stack.first           =># 'John'
+stack.push('Sally')   =># <Stack>
+stack.pop             =># 'Sally'
+```

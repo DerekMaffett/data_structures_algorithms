@@ -39,6 +39,7 @@ module Structures
     def insert(val)
       @head = Node.new(val, head)
       @size += 1
+      self
     end
 
     # Always return the node just *prior* to the search criteria, or prior to
