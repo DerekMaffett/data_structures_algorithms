@@ -110,7 +110,6 @@ module Structures
     end
   end
 
-
   DoublyLinkedNode = Struct.new(:value, :prev, :nexxt)
 
   class EmptyQueueError < RuntimeError; end
