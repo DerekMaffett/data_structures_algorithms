@@ -109,4 +109,44 @@ module Structures
       remove(first).value
     end
   end
+
+  DoublyLinkedNode = Struct.new(:value, :prev, :nexxt)
+
+  class EmptyQueueError < RuntimeError; end
+
+  class Queue
+    attr_accessor :head, :tail, :size
+
+    def initialize(*args)
+      @size = 0
+      args.each { |arg| enqueue(arg) }
+    end
+
+    def enqueue(val)
+      original_tail = @tail
+      @tail = DoublyLinkedNode.new(val, nil, original_tail)
+      original_tail.prev = @tail if original_tail
+      @head ||= @tail
+      @size += 1
+      self
+    end
+
+    def dequeue
+      deleted_value = first
+      fail EmptyQueueError unless deleted_value
+      @head = @head.prev
+      @head.nexxt = nil if @head
+      @tail = nil unless @head
+      @size -= 1
+      deleted_value
+    end
+
+    def first
+      @head.try(:value)
+    end
+
+    def last
+      @tail.try(:value)
+    end
+  end
 end
