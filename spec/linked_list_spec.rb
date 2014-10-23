@@ -1,44 +1,44 @@
 require 'spec_helper'
-require 'linked_list'
+require 'data_structures'
 
-describe SinglyLinkedList do
+describe Structures::SinglyLinkedList do
   before do
-    @list = SinglyLinkedList.new('John', 'Sally', 'Yuna')
+    @list = Structures::SinglyLinkedList.new('John', 'Sally', 'Yuna')
   end
 
   it 'should initialize with optional node argument' do
-    list = SinglyLinkedList.new('John')
-    list.head.must_be_instance_of Node
+    list = Structures::SinglyLinkedList.new('John')
+    list.head.must_be_instance_of Structures::Node
     list.head.value.must_equal 'John'
     list.head.nexxt.must_be_nil
   end
 
   it 'should initialize with multiple node arguments' do
-    list = SinglyLinkedList.new('John', 'Sally')
+    list = Structures::SinglyLinkedList.new('John', 'Sally')
     list.head.value.must_equal 'Sally'
-    list.head.nexxt.must_be_instance_of Node
+    list.head.nexxt.must_be_instance_of Structures::Node
     list.head.nexxt.value.must_equal 'John'
   end
 
   it 'should insert a node at the head of a list' do
-    list = SinglyLinkedList.new
+    list = Structures::SinglyLinkedList.new
     list.insert('John')
-    list.head.must_be_instance_of Node
+    list.head.must_be_instance_of Structures::Node
     list.head.value.must_equal 'John'
     list.head.nexxt.must_be_nil
   end
 
   it 'should have size 0 for a new list' do
-    SinglyLinkedList.new.size.must_equal 0
+    Structures::SinglyLinkedList.new.size.must_equal 0
   end
 
   it 'should report its size for a list with nodes' do
-    SinglyLinkedList.new('John', 'Sally').size.must_equal 2
+    Structures::SinglyLinkedList.new('John', 'Sally').size.must_equal 2
   end
 
   it 'should search nodes for a value and report that value' do
     search_result = @list.search('John')
-    search_result.must_be_instance_of Node
+    search_result.must_be_instance_of Structures::Node
     search_result.value.must_equal 'John'
   end
 
@@ -71,7 +71,7 @@ describe SinglyLinkedList do
   end
 
   it 'should format correctly for various inputs' do
-    list = SinglyLinkedList.new(42, 'string', :task, 1000)
+    list = Structures::SinglyLinkedList.new(42, 'string', :task, 1000)
     list.to_s.must_equal "1000, :task, 'string', 42"
   end
 end
