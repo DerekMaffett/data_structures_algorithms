@@ -107,7 +107,37 @@ still exist in case they are desired.
 
 ```
 stack = Structures::Stack.new('John')
-stack.first           =># 'John'
+stack.first           =># John
 stack.push('Sally')   =># <Stack>
-stack.pop             =># 'Sally'
+stack.pop             =># Sally
+```
+
+# Queue
+
+Originally, I tried to implement a queue by inheriting from a Singly Linked
+List, but it proved to be more trouble than it was worth. Since queues require
+interacting with both sides of a list (unlike a stack), they are better suited
+to a doubly linked list. This is the structure I used for making a queue, though
+very much in a pared down form. More advanced queues may require search, remove,
+priority-setting, etc, but a basic queue is simple enough that it can be
+implemented on its own without much overhead.
+
+This queue structure uses nodes internally (structures with values and
+references to surrounding nodes) and the external calls return only the values.
+This is helpful to keep the interior logic very much that of a linked list while
+adapter methods give more helpful information to the users of the class. This
+separation of internal vs external architecture was very helpful to the design.
+
+Examples of use:
+
+```
+queue = Structures::Queue.new('John', 'Sally')
+queue.first              =># John
+queue.last               =># Sally
+queue.enqueue('Jeffery') =># <Queue>
+queue.last               =># Jeffery
+queue.dequeue            =># John
+queue.dequeue            =># Sally
+queue.first              =># Jeffery
+queue.size               =># 1
 ```
