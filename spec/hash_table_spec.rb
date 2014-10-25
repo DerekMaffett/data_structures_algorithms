@@ -65,4 +65,28 @@ describe Structures::HashTable do
       @hash_table.size.must_equal 0
     end
   end
+
+  describe 'should work appropriately under real-life conditions' do
+    it 'should handle large data sets' do
+      dict_size = nil
+      File.open('/usr/share/dict/words', 'r') do |f|
+        lines = f.readlines
+        dict_size = lines.size
+        lines.each { |line| @empty_hash_table.set(line, line.reverse) }
+      end
+      File.open('/usr/share/dict/words', 'r') do |f|
+        lines = f.readlines
+        lines.each { |line| @empty_hash_table.get(line).must_equal line.reverse }
+      end
+
+      @empty_hash_table.size.must_equal dict_size
+      @empty_hash_table.allocation.must_equal 128_000
+
+      @empty_hash_table.each do |k, v|
+        @empty_hash_table.set(k, nil)
+      end
+
+      @empty_hash_table.size.must_equal 0
+    end
+  end
 end

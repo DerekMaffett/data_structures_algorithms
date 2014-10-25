@@ -216,7 +216,7 @@ module Structures
       @buckets = Array.new(@allocation)
     end
 
-    attr_reader :size
+    attr_reader :size, :allocation
 
     def hash(key)
       key.chars.inject(0) { |accum, c| accum + c.ord }
@@ -235,6 +235,7 @@ module Structures
         @buckets[index].unshift(key, value)
         @size += 1
       end
+      reallocate_memory if @size >= @allocation
       value
     end
 
@@ -245,6 +246,14 @@ module Structures
       @buckets[index].search(key).try(:value)
     end
 
+    def each
+      @buckets.each do |bucket|
+        bucket.try(:each) do |node|
+          yield(node.key, node.value)
+        end
+      end
+    end
+
     private
 
     def nullify(key, index)
@@ -252,6 +261,19 @@ module Structures
       @buckets[index].remove(key)
       @size += @buckets[index].size - initial_size
       nil
+    end
+
+    def reallocate_memory
+      @allocation *= 2
+      @size = 0
+      temp_buckets = @buckets
+      @buckets = Array.new(@allocation)
+      temp_buckets.each do |bucket|
+        bucket.try(:each) do |node|
+          set(node.key, node.value)
+        end
+      end
+      self
     end
   end
 end
