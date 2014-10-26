@@ -192,3 +192,9 @@ The size of a hash table can also be queried at any time as an O(1) function.
 ```
 hash_with_13_elements.size =># 13
 ```
+
+# Binary Tree
+
+Still a work in progress at the moment, this structure demonstrates how
+to do pre, in, and post-order traversal of a binary tree. Each of the traversal
+methods accepts a block with a value parameter for each node's value.

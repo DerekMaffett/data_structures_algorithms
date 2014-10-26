@@ -289,4 +289,50 @@ module Structures
       @size += 1
     end
   end
+
+  class BinaryTree
+    def initialize(value = nil, left = nil, right = nil)
+      @value = value
+      @left = left
+      @right = right
+    end
+
+    attr_reader :value
+
+    # { pre: [0, 1, 2], in: [1, 0, 2], post: [1, 2, 0] }.each do |prefix, order|
+    #   order_procs = [
+    #   -> { yield(@value) },
+    #   -> { @left.try("#{prefix}order".to_sym) { |value| yield(value) } },
+    #   -> { @right.try("#{prefix}order".to_sym) { |value| yield(value) } }
+    #   ]
+    #   define_method("#{prefix}order") do
+    #     return unless @value
+    #     order.each do |i|
+    #       puts order_procs[i]
+    #       order_procs[i].call
+    #     end
+    #   end
+    # end
+
+    def preorder
+      return unless @value
+      yield(@value)
+      @left.try(:preorder) { |value| yield(value) }
+      @right.try(:preorder) { |value| yield(value) }
+    end
+
+    def inorder
+      return unless @value
+      @left.try(:inorder) { |value| yield(value) }
+      yield(@value)
+      @right.try(:inorder) { |value| yield(value) }
+    end
+
+    def postorder
+      return unless @value
+      @left.try(:postorder) { |value| yield(value) }
+      @right.try(:postorder) { |value| yield(value) }
+      yield(@value)
+    end
+  end
 end
