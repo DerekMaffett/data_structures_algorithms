@@ -4,7 +4,7 @@ require 'data_structures'
 describe Structures::HashTable do
   before do
     @empty_hash_table = Structures::HashTable.new(1000)
-    @hash_table = Structures::HashTable.new(1000)
+    @hash_table = Structures::HashTable.new
     @hash_table.set('Steve', 'Apple Computers')
   end
 

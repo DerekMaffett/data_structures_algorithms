@@ -210,7 +210,7 @@ module Structures
     end
 
   class HashTable
-    def initialize(allocation)
+    def initialize(allocation = 1024)
       @allocation = allocation
       @size = 0
       @buckets = Array.new(@allocation)
