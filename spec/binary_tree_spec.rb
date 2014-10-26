@@ -57,11 +57,10 @@ describe Structures::BinaryTree do
   end
 end
 
-
   #                   Tim
 
   #      Jony                   Phil
 
   # Dan       Katie         Craig   Eadie
 
-  #       Peter   Andrea
+  #      Peter    Andrea

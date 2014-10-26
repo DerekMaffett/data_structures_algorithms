@@ -321,14 +321,14 @@ module Structures
       @right.try(:preorder) { |value| yield(value) }
     end
 
-    def inorder(node = @head)
+    def inorder
       return unless @value
       @left.try(:inorder) { |value| yield(value) }
       yield(@value)
       @right.try(:inorder) { |value| yield(value) }
     end
 
-    def postorder(node = @head)
+    def postorder
       return unless @value
       @left.try(:postorder) { |value| yield(value) }
       @right.try(:postorder) { |value| yield(value) }
