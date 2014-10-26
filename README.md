@@ -141,3 +141,54 @@ queue.dequeue            =># Sally
 queue.first              =># Jeffery
 queue.size               =># 1
 ```
+# Hash Table
+
+A light reproduction of the Ruby hash table. This is implemented via
+two basic functions:
+
+```
+# The number of bins should be predefined, else it defaults to 1024
+hash = HashTable.new(NUMBER)
+hash.set(key, value) => value
+hash.get(key) => value
+```
+
+Behind the scenes, this uses a #hash function to render each word into a hash
+value which is modded by the bin allocation and added to the array. For current
+purposes, this is a simple additive hashing function and should not be used
+for any real loads. Collisions are frequent, which aids in testing worst case
+scenarios, but slows down search functions considerably. For real usage, please
+make sure to replace the #hash function with a better hashing algorithm.
+
+Once the bin has been selected, both the key and value are stored in a node of
+a singly linked list. When searching, the #get method hashes the key to find
+the correct bin, and then searches only that bin's nodes to find the correct
+key/value pair.
+
+In order to save memory, setting a key's value to nil will remove the node
+entirely since a nonexistent key will return nil just as would a key/value pair
+with value == nil.
+
+To prevent excessive collisions, a hash's bin allocation is automatically
+doubled when the number of k/v pairs reaches the number of bins. Since this
+requires the recalculation of which bin each key should belong to, this O(n)
+procedure should be avoided if at all possible. Make sure to allocate bins
+on the expected scale of your data, or the #set method will occasionally take
+far longer than expected.
+
+Additionally, in order to replicate the convenience of the Ruby #each method
+on hashes, I've written one to iterate through each bucket and each node,
+passing in the key and value to the block. Therefore, you can use this class
+to write familiar code such as:
+
+```
+some_hash.each do |k, v|
+  puts "Key: #{k}, Value: #{v}"
+end
+```
+
+The size of a hash table can also be queried at any time as an O(1) function.
+
+```
+hash_with_13_elements.size =># 13
+```

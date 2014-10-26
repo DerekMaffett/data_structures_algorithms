@@ -37,7 +37,7 @@ module Structures
     end
 
     def insert(val)
-      @head = Node.new(val, head)
+      @head = Node.new(val, @head)
       @size += 1
       self
     end
@@ -147,6 +147,146 @@ module Structures
 
     def last
       @tail.try(:value)
+    end
+  end
+
+  class HashKeyError < RuntimeError; end
+
+  class HashNode
+    def initialize(key, value, nexxt)
+      @key = key
+      @value = value
+      @nexxt = nexxt
+    end
+
+    attr_accessor :key, :value, :nexxt
+  end
+
+  class HashLinkedList
+    def initialize
+      @size = 0
+      @head = nil
+    end
+
+    attr_reader :size
+
+    def unshift(key, val)
+      @head = HashNode.new(key, val, @head)
+      @size += 1
+      self
+    end
+
+    def search(key)
+      current_node = @head
+      until current_node.nil?
+        return current_node if current_node.key == key
+        current_node = current_node.nexxt
+      end
+    end
+
+    def remove(key)
+      return reassign_head if @head.key == key
+      current_node = @head
+      while current_node.nexxt
+        if current_node.nexxt.try(:key) == key
+          return remove_node
+        else
+          current_node = current_node.nexxt
+        end
+      end
+    end
+
+    def each
+      current_node = @head
+      until current_node.nil?
+        yield(current_node)
+        current_node = current_node.nexxt
+      end
+    end
+
+    private
+
+    def reassign_head
+      @head = @head.nexxt
+      @size -= 1
+      nil
+    end
+
+    def remove_node
+      current_node.nexxt = current_node.nexxt.nexxt
+      @size -= 1
+      nil
+    end
+  end
+
+  class HashTable
+    def initialize(allocation = 1024)
+      @allocation = allocation
+      @size = 0
+      @buckets = Array.new(@allocation)
+    end
+
+    attr_reader :size, :allocation
+
+    def hash(key)
+      key.chars.reduce(0) { |a, c| a + c.ord }
+    end
+
+    def set(key, value)
+      fail HashKeyError unless key.is_a? String
+
+      index = hash(key) % @allocation
+      @buckets[index] ||= HashLinkedList.new
+
+      return nullify(key, index) if value.nil?
+
+      entry = @buckets[index].search(key)
+      entry ? entry.value = value : new_kv_pair(index, key, value)
+
+      reallocate_memory if @size >= @allocation
+      value
+    end
+
+    def get(key)
+      fail HashKeyError unless key.is_a? String
+      index = hash(key) % @allocation
+      return nil unless @buckets[index]
+      @buckets[index].search(key).try(:value)
+    end
+
+    def each
+      @buckets.each do |bucket|
+        bucket.try(:each) do |node|
+          yield(node.key, node.value)
+        end
+      end
+    end
+
+    private
+
+    def nullify(key, index)
+      initial_size = @buckets[index].size
+      @buckets[index].remove(key)
+      @size += @buckets[index].size - initial_size
+      nil
+    end
+
+    def reallocate_memory
+      @allocation *= 2
+      @size = 0
+      temp_buckets = @buckets
+      @buckets = Array.new(@allocation)
+      temp_buckets.each do |bucket|
+        bucket.try(:each) do |node|
+          set(node.key, node.value)
+        end
+      end
+      self
+    end
+
+    def new_kv_pair(index, key, value)
+      @buckets[index].unshift(key, value)
+      @size += 1
     end
   end
 end
