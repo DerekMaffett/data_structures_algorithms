@@ -163,51 +163,61 @@ module Structures
   end
 
   class HashLinkedList
-      def initialize
-        @size = 0
-        @head = nil
+    def initialize
+      @size = 0
+      @head = nil
+    end
+
+    attr_reader :size
+
+    def unshift(key, val)
+      @head = HashNode.new(key, val, @head)
+      @size += 1
+      self
+    end
+
+    def search(key)
+      current_node = @head
+      until current_node.nil?
+        return current_node if current_node.key == key
+        current_node = current_node.nexxt
       end
+    end
 
-      attr_reader :size
-
-      def unshift(key, val)
-        @head = HashNode.new(key, val, @head)
-        @size += 1
-        self
-      end
-
-      def search(key)
-        current_node = @head
-        until current_node.nil?
-          return current_node if current_node.key == key
-          current_node = current_node.nexxt
-        end
-      end
-
-      def remove(key)
-        if @head.key == key
-          @head = @head.nexxt
-          @size -= 1
-          return nil
-        end
-        current_node = @head
-        while current_node.nexxt
-          if current_node.nexxt.try(:key) == key
-            current_node.nexxt = current_node.nexxt.nexxt
-            @size -= 1
-            return nil
-          end
-        end
-      end
-
-      def each
-        current_node = @head
-        until current_node.nil?
-          yield(current_node)
+    def remove(key)
+      return reassign_head if @head.key == key
+      current_node = @head
+      while current_node.nexxt
+        if current_node.nexxt.try(:key) == key
+          return remove_node
+        else
           current_node = current_node.nexxt
         end
       end
     end
+
+    def each
+      current_node = @head
+      until current_node.nil?
+        yield(current_node)
+        current_node = current_node.nexxt
+      end
+    end
+
+    private
+
+    def reassign_head
+      @head = @head.nexxt
+      @size -= 1
+      nil
+    end
+
+    def remove_node
+      current_node.nexxt = current_node.nexxt.nexxt
+      @size -= 1
+      nil
+    end
+  end
 
   class HashTable
     def initialize(allocation = 1024)
@@ -219,22 +229,20 @@ module Structures
     attr_reader :size, :allocation
 
     def hash(key)
-      key.chars.inject(0) { |accum, c| accum + c.ord }
+      key.chars.reduce(0) { |a, c| a + c.ord }
     end
 
     def set(key, value)
       fail HashKeyError unless key.is_a? String
+
       index = hash(key) % @allocation
       @buckets[index] ||= HashLinkedList.new
+
       return nullify(key, index) if value.nil?
-      table_entry = @buckets[index].search(key)
-      if table_entry
-        table_entry.key = key
-        table_entry.value = value
-      else
-        @buckets[index].unshift(key, value)
-        @size += 1
-      end
+
+      entry = @buckets[index].search(key)
+      entry ? entry.value = value : new_kv_pair(index, key, value)
+
       reallocate_memory if @size >= @allocation
       value
     end
@@ -274,6 +282,11 @@ module Structures
         end
       end
       self
+    end
+
+    def new_kv_pair(index, key, value)
+      @buckets[index].unshift(key, value)
+      @size += 1
     end
   end
 end

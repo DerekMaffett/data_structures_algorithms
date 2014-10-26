@@ -76,13 +76,15 @@ describe Structures::HashTable do
       end
       File.open('/usr/share/dict/words', 'r') do |f|
         lines = f.readlines
-        lines.each { |line| @empty_hash_table.get(line).must_equal line.reverse }
+        lines.each do |line|
+          @empty_hash_table.get(line).must_equal line.reverse
+        end
       end
 
       @empty_hash_table.size.must_equal dict_size
       @empty_hash_table.allocation.must_equal 128_000
 
-      @empty_hash_table.each do |k, v|
+      @empty_hash_table.each do |k, _v|
         @empty_hash_table.set(k, nil)
       end
 
