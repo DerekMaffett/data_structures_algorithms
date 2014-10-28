@@ -346,14 +346,8 @@ module Structures
 
   class DoublyLinkedNode
     def remove
-      puts "Before removal"
-      puts "Next: #{@nexxt}"
-      puts "Prev: #{@prev}"
       @nexxt.prev = @prev if @nexxt.try(:prev)
       @prev.nexxt = @nexxt if @prev.try(:nexxt)
-      puts "After removal"
-      puts "Next: #{@nexxt}"
-      puts "Prev: #{@prev}"
     end
   end
 
@@ -376,14 +370,6 @@ module Structures
       self
     end
 
-    def each_node
-      current_node = @tail
-      while current_node
-        yield(current_node)
-        current_node = current_node.nexxt
-      end
-    end
-
     def deduplicate
       duplicate = self.dup
       duplicate.deduplicate!
@@ -393,12 +379,31 @@ module Structures
       values = {}
       each_node do |node|
         if values[node.value]
-          puts "removing #{node.value}"
-          node.remove
+          remove(node)
         end
         values[node.value] = true
       end
       self
+    end
+
+    def to_s
+      string = ''
+      each do |value|
+        string += "#{value} "
+      end
+      string.gsub(/ \Z/, '')
+    end
+
+    def remove(node)
+      @head = node.prev if node == @head
+      @tail = node.nexxt if node == @tail
+      node.remove
+    end
+
+    def each
+      each_node do |node|
+        yield(node.value)
+      end
     end
 
     def head
@@ -407,6 +412,16 @@ module Structures
 
     def tail
       @tail.try(:value)
+    end
+
+    private
+
+    def each_node
+      current_node = @tail
+      while current_node
+        yield(current_node)
+        current_node = current_node.nexxt
+      end
     end
   end
 end

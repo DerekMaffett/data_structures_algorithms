@@ -23,30 +23,18 @@ describe Structures::DoublyLinkedList do
 
   describe '#each_node' do
     it 'should iterate over nodes' do
-      result = ''
-      @list.each_node do |node|
-        result += "#{node.value} "
-      end
-      result.must_equal 'Kelly Peter John '
+      @list.to_s.must_equal 'Kelly Peter John'
     end
   end
 
   describe '#deduplicate' do
     it 'should remove duplicate nodes' do
-      result = ''
-      @duplicates_list.deduplicate.each_node do |node|
-        result += "#{node.value} "
-      end
-      result.must_equal '5 4 3 2 1 '
+      @duplicates_list.deduplicate.to_s.must_equal '5 4 3 2 1'
     end
 
     it 'should also deduplicate large random data sets' do
-      result = ''
-      @random_duplicates_list.deduplicate.each_node do |node|
-        result += "#{node.value} "
-      end
-      result = result.gsub(/ \Z/, '').split(' ')
-      result.size.must_equal result.uniq.size
+      arrayified = @random_duplicates_list.deduplicate.to_s.split(' ')
+      arrayified.size.must_equal arrayified.uniq.size
     end
   end
 end
