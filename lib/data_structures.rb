@@ -378,10 +378,22 @@ module Structures
     def deduplicate!
       values = {}
       each_node do |node|
-        if values[node.value]
-          remove(node)
-        end
+        remove(node) if values[node.value]
         values[node.value] = true
+      end
+      self
+    end
+
+    def constant_space_deduplicate
+      duplicate = self.dup
+      duplicate.constant_space_deduplicate!
+    end
+
+    def constant_space_deduplicate!
+      each_node do |i_node|
+        each_node do |j_node|
+          remove(i_node) if i_node.value == j_node.value
+        end
       end
       self
     end
