@@ -110,7 +110,15 @@ module Structures
     end
   end
 
-  DoublyLinkedNode = Struct.new(:value, :prev, :nexxt)
+  class DoublyLinkedNode
+    def initialize(value, prev, nexxt)
+      @value = value
+      @prev = prev
+      @nexxt = nexxt
+    end
+
+    attr_accessor :value, :prev, :nexxt
+  end
 
   class EmptyQueueError < RuntimeError; end
 
@@ -333,6 +341,99 @@ module Structures
       @left.try(:postorder) { |value| yield(value) }
       @right.try(:postorder) { |value| yield(value) }
       yield(@value)
+    end
+  end
+
+  class DoublyLinkedNode
+    def remove
+      @nexxt.prev = @prev if @nexxt.try(:prev)
+      @prev.nexxt = @nexxt if @prev.try(:nexxt)
+    end
+  end
+
+  class DoublyLinkedList
+    attr_reader :size
+
+    def initialize(*args)
+      @head = nil
+      @tail = nil
+      @size = 0
+      args.each { |arg| unshift(arg) }
+    end
+
+    def unshift(val)
+      original_tail = @tail
+      @tail = DoublyLinkedNode.new(val, nil, original_tail)
+      original_tail.prev = @tail if original_tail
+      @head ||= @tail
+      @size += 1
+      self
+    end
+
+    def deduplicate
+      duplicate = self.dup
+      duplicate.deduplicate!
+    end
+
+    def deduplicate!
+      values = {}
+      each_node do |node|
+        remove(node) if values[node.value]
+        values[node.value] = true
+      end
+      self
+    end
+
+    def constant_space_deduplicate
+      duplicate = self.dup
+      duplicate.constant_space_deduplicate!
+    end
+
+    def constant_space_deduplicate!
+      each_node do |i_node|
+        each_node do |j_node|
+          remove(i_node) if i_node.value == j_node.value && i_node != j_node
+        end
+      end
+      self
+    end
+
+    def to_s
+      string = ''
+      each do |value|
+        string += "#{value} "
+      end
+      string.gsub(/ \Z/, '')
+    end
+
+    def remove(node)
+      @head = node.prev if node == @head
+      @tail = node.nexxt if node == @tail
+      node.remove
+    end
+
+    def each
+      each_node do |node|
+        yield(node.value)
+      end
+    end
+
+    def head
+      @head.try(:value)
+    end
+
+    def tail
+      @tail.try(:value)
+    end
+
+    private
+
+    def each_node
+      current_node = @tail
+      while current_node
+        yield(current_node)
+        current_node = current_node.nexxt
+      end
     end
   end
 end
