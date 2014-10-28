@@ -38,7 +38,9 @@ describe Structures::DoublyLinkedList do
     end
   end
 
-  # describe '#constant_space_deduplicate' do
-  #   @duplicates_list.constant_space_deduplicate.to_s.must_equal '5 4 3 2 1'
-  # end
+  describe '#constant_space_deduplicate' do
+    it 'should remove duplicate nodes' do
+      @duplicates_list.constant_space_deduplicate.to_s.must_equal '5 4 3 2 1'
+    end
+  end
 end

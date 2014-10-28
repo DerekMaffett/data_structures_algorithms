@@ -392,7 +392,7 @@ module Structures
     def constant_space_deduplicate!
       each_node do |i_node|
         each_node do |j_node|
-          remove(i_node) if i_node.value == j_node.value
+          remove(i_node) if i_node.value == j_node.value && i_node != j_node
         end
       end
       self
