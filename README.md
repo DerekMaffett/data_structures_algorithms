@@ -204,7 +204,10 @@ methods accepts a block with a value parameter for each node's value.
 A better version of the doubly linked list implemented for the queue. The main
 feature here is a minor algorithm for deduplicating values. It iterates through
 the list of items and calls remove for each node that contains a value already
-seen (tracked through a hash).
+seen (tracked through a hash). I have also implemented a constant space version
+that is up to O(n^2) time complexity which compares the nodes from an inner
+loop with those on an outer loop. This is considerably worse than the default
+method, and is presented only as an example of an alternative algorithm.
 
 This also contains some important coding concepts, particularly DRY code.
 The methods available here make use of other methods in order to accomplish
@@ -217,3 +220,4 @@ turn is just a narrowing of the more powerful #each_node, which is kept as
 a private method to avoid exposing excessive data-manipulation control to
 the end user. With each bit of logic checked into its own method, it's easy
 to change the algorithm as needed.
+
