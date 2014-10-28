@@ -110,7 +110,15 @@ module Structures
     end
   end
 
-  DoublyLinkedNode = Struct.new(:value, :prev, :nexxt)
+  class DoublyLinkedNode
+    def initialize(value, prev, nexxt)
+      @value = value
+      @prev = prev
+      @nexxt = nexxt
+    end
+
+    attr_accessor :value, :prev, :nexxt
+  end
 
   class EmptyQueueError < RuntimeError; end
 
@@ -333,6 +341,72 @@ module Structures
       @left.try(:postorder) { |value| yield(value) }
       @right.try(:postorder) { |value| yield(value) }
       yield(@value)
+    end
+  end
+
+  class DoublyLinkedNode
+    def remove
+      puts "Before removal"
+      puts "Next: #{@nexxt}"
+      puts "Prev: #{@prev}"
+      @nexxt.prev = @prev if @nexxt.try(:prev)
+      @prev.nexxt = @nexxt if @prev.try(:nexxt)
+      puts "After removal"
+      puts "Next: #{@nexxt}"
+      puts "Prev: #{@prev}"
+    end
+  end
+
+  class DoublyLinkedList
+    attr_reader :size
+
+    def initialize(*args)
+      @head = nil
+      @tail = nil
+      @size = 0
+      args.each { |arg| unshift(arg) }
+    end
+
+    def unshift(val)
+      original_tail = @tail
+      @tail = DoublyLinkedNode.new(val, nil, original_tail)
+      original_tail.prev = @tail if original_tail
+      @head ||= @tail
+      @size += 1
+      self
+    end
+
+    def each_node
+      current_node = @tail
+      while current_node
+        yield(current_node)
+        current_node = current_node.nexxt
+      end
+    end
+
+    def deduplicate
+      duplicate = self.dup
+      duplicate.deduplicate!
+    end
+
+    def deduplicate!
+      values = {}
+      each_node do |node|
+        if values[node.value]
+          puts "removing #{node.value}"
+          node.remove
+        end
+        values[node.value] = true
+      end
+      self
+    end
+
+    def head
+      @head.try(:value)
+    end
+
+    def tail
+      @tail.try(:value)
     end
   end
 end
